@@ -37,7 +37,7 @@ export function register(username, password, confirmPassword) {
     const hashed = createHasher(salt)(password);
     users.push({ username, password: hashed, salt });
     localStorage.setItem('users', JSON.stringify(users));
-    alert('Đăng ký thành công');
+    // XÓA alert ở đây, để app.js handle
 }
 
 export async function login(username, password) {
