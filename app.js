@@ -1,3 +1,4 @@
+// ...existing code...
 import * as Auth from './authModule.js';
 import * as EmployeeDb from './employeeDbModule.js';
 import * as AddEmployee from './addEmployeeModule.js';
@@ -39,8 +40,7 @@ function initApp() {
     const loginError = document.getElementById('login-error');
     const regError = document.getElementById('reg-error');
 
-    console.log('Elements:', { loginForm, registerForm, registerDiv, switchToLogin }); // Debug elements
-
+    console.log('Elements:', { loginForm, registerForm, registerDiv, switchToLogin }); // 
     if (dashboard) {
         dashboard.style.display = 'none';
         content.innerHTML = ''; // Clear bất kỳ nội dung nào nếu module load sớm
@@ -54,7 +54,6 @@ function initApp() {
         showRegister();
     }
 
-    // Listener cho login form
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const username = document.getElementById('username').value.trim();
@@ -68,62 +67,42 @@ function initApp() {
         }
     });
 
-    // Listener cho registerBtn (từ login → register) - THÊM MỚI
-    if (registerBtn) {
-        registerBtn.addEventListener('click', () => {
-            console.log('Switch to register clicked!');
-            showRegister();
-        });
-    }
+    registerBtn.style.display = 'none'; // Ẩn vì dùng form register riêng
 
-    // Listener cho logout
-    if (logout) {
-        logout.addEventListener('click', () => {
-            Auth.logout();
-            showLogin();
-        });
-    }
+    logout.addEventListener('click', () => {
+        Auth.logout();
+        showLogin();
+    });
 
-    // Listener cho menu
-    if (menu) {
-        menu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A' && e.target.dataset.module) {
-                e.preventDefault();
-                const moduleName = e.target.dataset.module;
-                content.innerHTML = '';
-                modules[moduleName].init(content);
-            }
-        });
-    }
-
-    // Listener cho register form
-    if (registerForm) {
-        registerForm.addEventListener('submit', async (e) => {
-            console.log('Register form submit fired!'); // Debug
+    menu.addEventListener('click', (e) => {
+        if (e.target.tagName === 'A' && e.target.dataset.module) {
             e.preventDefault();
-            const username = document.getElementById('reg-username').value.trim();
-            const password = document.getElementById('reg-password').value;
-            const confirmPassword = document.getElementById('reg-confirm').value;
-            regError.textContent = '';
-            try {
-                await Auth.register(username, password, confirmPassword);
-                alert('Đăng ký thành công! Vui lòng đăng nhập.');
-                showLogin();
-            } catch (error) {
-                regError.textContent = error.message;
-            }
-        });
-    }
-
-    // Listener cho switchToLogin (từ register → login)
-    if (switchToLogin) {
-        switchToLogin.addEventListener('click', () => {
-            console.log('Switch to login clicked!');
+            const moduleName = e.target.dataset.module;
+            content.innerHTML = '';
+            modules[moduleName].init(content);
+        }
+    });
+    registerForm.addEventListener('submit', async (e) => {
+        console.log('Register form submit fired!'); // Xem event có chạy không
+        e.preventDefault();
+        const username = document.getElementById('reg-username').value.trim();
+        const password = document.getElementById('reg-password').value;
+        const confirmPassword = document.getElementById('reg-confirm').value;
+        regError.textContent = '';
+        try {
+            await Auth.register(username, password, confirmPassword);
+            alert('Đăng ký thành công! Vui lòng đăng nhập.');
             showLogin();
-        });
-    }
+        } catch (error) {
+            regError.textContent = error.message;
+        }
+    });
 
-    // Init default data
+    switchToLogin.addEventListener('click', () => {
+        console.log('Switch to login clicked!');
+        showLogin();
+    });
+
     EmployeeDb.initDefaultData();
     Department.initDefaultData();
     Position.initDefaultData();
@@ -143,52 +122,50 @@ function initApp() {
 
     function showDashboard() {
         console.log('Calling showDashboard');
-        if (loginDiv) loginDiv.style.display = 'none';
-        if (registerDiv) registerDiv.style.display = 'none';
-        if (dashboard) dashboard.style.display = 'block';  // Hiển thị dashboard
-        if (content) content.innerHTML = '';  // Clear trước khi load
-        if (modules['searchEmployee']) modules['searchEmployee'].init(content);  // Load nội dung
+        loginDiv.style.display = 'none';
+        registerDiv.style.display = 'none';
+        dashboard.style.display = 'block';  // Hiển thị dashboard
+        content.innerHTML = '';  // Clear trước khi load
+        modules['searchEmployee'].init(content);  // Load nội dung
     }
-
     function showLogin() {
-        console.log('Calling showLogin'); // Debug thêm
-        if (dashboard) dashboard.style.display = 'none';  // Ẩn dashboard
-        if (content) content.innerHTML = '';  // Clear content
-        if (loginDiv) loginDiv.style.display = 'block';
-        if (registerDiv) registerDiv.style.display = 'none';
-        if (loginError) loginError.textContent = '';
+        console.log('Calling showLogin');
+        dashboard.style.display = 'none';  // Ẩn dashboard
+        content.innerHTML = '';  // Clear content
+        loginDiv.style.display = 'block';
+        registerDiv.style.display = 'none';
+        loginError.textContent = '';
     }
-
     function showRegister() {
         console.log('Calling showRegister');
-        if (dashboard) dashboard.style.display = 'none';  // Ẩn dashboard
-        if (content) content.innerHTML = '';  // Clear content
-        if (loginDiv) loginDiv.style.display = 'none';
-        if (registerDiv) registerDiv.style.display = 'block';
-        if (regError) regError.textContent = '';
+        dashboard.style.display = 'none';  // Ẩn dashboard
+        content.innerHTML = '';  // Clear content
+        loginDiv.style.display = 'none';
+        registerDiv.style.display = 'block';
+        regError.textContent = '';
     }
-
-    // Hàm ẩn menu trên trang đăng ký (giữ nguyên, nhưng check selector đúng nếu có .sidebar)
-    function hideMenuOnRegister() {
-        const currentPath = window.location.pathname; // Lấy path hiện tại, ví dụ '/register'
-        const menu = document.querySelector('#menu'); // Sửa selector thành #menu (thay vì .sidebar)
-        
-        if (currentPath.includes('/register') || document.body.classList.contains('register-page')) {
-            if (menu) {
-                menu.style.display = 'none';
-            }
-            // Thêm class để body full-width nếu cần
-            document.body.classList.add('no-menu');
-        } else {
-            // Hiện menu lại nếu không phải trang đăng ký
-            if (menu) {
-                menu.style.display = 'block'; // Hoặc giá trị gốc
-            }
-            document.body.classList.remove('no-menu');
+    // Hàm ẩn menu trên trang đăng ký
+function hideMenuOnRegister() {
+    const currentPath = window.location.pathname; // Lấy path hiện tại, ví dụ '/register'
+    const menu = document.querySelector('.sidebar'); // Thay '.sidebar' bằng selector thực tế của menu
+    
+    if (currentPath.includes('/register') || document.body.classList.contains('register-page')) {
+        if (menu) {
+            menu.style.display = 'none';
         }
+        // Thêm class để body full-width nếu cần
+        document.body.classList.add('no-menu');
+    } else {
+        // Hiện menu lại nếu không phải trang đăng ký
+        if (menu) {
+            menu.style.display = 'block'; // Hoặc giá trị gốc
+        }
+        document.body.classList.remove('no-menu');
     }
-
-    document.addEventListener('DOMContentLoaded', hideMenuOnRegister);
 }
 
+
+document.addEventListener('DOMContentLoaded', hideMenuOnRegister);
+}
+// ...existing code...
 document.addEventListener('DOMContentLoaded', initApp);
