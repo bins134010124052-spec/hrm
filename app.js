@@ -4,10 +4,10 @@ import * as EmployeeDb from './employeeDbModule.js';
 import * as AddEmployee from './addEmployeeModule.js';
 import * as EditEmployee from './editEmployeeModule.js';
 import * as DeleteEmployee from './deleteEmployeeModule.js';
-import * as SearchEmployee from './searchEmployeeModule.js';
+import * as SearchEmployee from './SearchEmployeeModule.js';
 import * as Department from './departmentModule.js';
 import * as Position from './positionModule.js';
-import * as Salary from './salaryModule.js';
+import * as Salary from './SalaryModule.js';
 import * as Attendance from './attendanceModule.js';
 import * as Leave from './leaveModule.js';
 import * as Performance from './performanceModule.js';
@@ -169,3 +169,4 @@ document.addEventListener('DOMContentLoaded', hideMenuOnRegister);
 }
 // ...existing code...
 document.addEventListener('DOMContentLoaded', initApp);
+
